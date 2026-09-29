@@ -1,0 +1,480 @@
+/* ========================================
+   SIPIKA DASHBOARD
+======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* ========================================
+   WRAPPER
+======================================== */
+
+.sipika-wrapper {
+    min-height: 100vh;
+    display: flex;
+    background: #087052;
+}
+
+
+/* ========================================
+   SIDEBAR
+======================================== */
+
+.sipika-sidebar {
+    width: 190px;
+    min-height: 100vh;
+    background: #ffd33d;
+    flex-shrink: 0;
+}
+
+
+/* BRAND */
+
+.brand {
+    height: 65px;
+    background: #d9ae32;
+
+    display: flex;
+    align-items: center;
+
+    padding-left: 15px;
+
+    color: white;
+
+    font-size: 30px;
+    font-weight: 700;
+}
+
+
+/* SIDEBAR MENU */
+
+.sidebar-menu {
+    padding-top: 8px;
+}
+
+
+/* MENU LINK */
+
+.sidebar-menu a {
+    min-height: 56px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 8px 18px;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 19px;
+    font-weight: 700;
+
+    line-height: 1.15;
+
+    transition: 0.2s;
+}
+
+
+/* ICON */
+
+.sidebar-menu a i {
+    width: 25px;
+
+    flex-shrink: 0;
+
+    font-size: 20px;
+
+    text-align: center;
+}
+
+
+/* HOVER */
+
+.sidebar-menu a:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+
+/* ACTIVE */
+
+.sidebar-menu a.active {
+    background: rgba(255, 255, 255, 0.10);
+}
+
+
+/* FORM LOGOUT */
+
+.sidebar-menu form {
+    margin: 0;
+    padding: 0;
+}
+
+
+/* ========================================
+   CONTENT
+======================================== */
+
+.sipika-content {
+    flex: 1;
+
+    min-width: 0;
+
+    background: #087052;
+}
+
+
+/* ========================================
+   TOPBAR
+======================================== */
+
+.sipika-topbar {
+    height: 60px;
+
+    background: #72aa68;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 22px;
+
+    border-top: 4px solid #176b43;
+}
+
+
+/* HAMBURGER */
+
+.hamburger {
+    border: 0;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 28px;
+
+    padding: 0;
+
+    cursor: pointer;
+}
+
+
+/* PROFILE */
+
+.topbar-profile {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    font-size: 29px;
+}
+
+
+/* ========================================
+   PAGE TITLE
+======================================== */
+
+.page-title {
+    padding: 14px 40px 8px;
+}
+
+.page-title h1 {
+    margin: 0;
+
+    color: white;
+
+    font-size: 30px;
+
+    font-weight: 700;
+}
+
+
+/* ========================================
+   MAIN
+======================================== */
+
+.sipika-main {
+    padding: 18px 40px 40px;
+}
+
+
+/* ========================================
+   DASHBOARD
+======================================== */
+
+.dashboard-container {
+    width: 100%;
+}
+
+
+/* ========================================
+   STAT CARDS
+======================================== */
+
+.dashboard-stats {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 48px;
+
+    margin-bottom: 15px;
+}
+
+
+.dashboard-stat-card {
+    height: 95px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 9px 18px;
+
+    text-align: center;
+
+    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.20);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: flex-start;
+}
+
+
+.stat-title {
+    color: #42c4cf;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    margin-bottom: 10px;
+}
+
+
+.stat-value {
+    color: #333;
+
+    font-size: 19px;
+
+    font-weight: 700;
+}
+
+
+/* ========================================
+   BOTTOM AREA
+======================================== */
+
+.dashboard-bottom {
+    display: grid;
+
+    grid-template-columns: minmax(0, 2fr) minmax(230px, 0.8fr);
+
+    gap: 10px;
+}
+
+
+/* ========================================
+   CHART CARD
+======================================== */
+
+.dashboard-chart-card {
+    height: 350px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 12px 14px;
+
+    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.20);
+}
+
+
+.dashboard-chart-card h2,
+.quick-menu-card h2 {
+    margin: 0 0 15px;
+
+    color: #111;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+
+.chart-wrapper {
+    height: 280px;
+
+    width: 100%;
+}
+
+
+/* ========================================
+   QUICK MENU
+======================================== */
+
+.quick-menu-card {
+    min-height: 350px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 12px 32px;
+
+    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.20);
+
+    text-align: center;
+}
+
+
+.quick-menu-card h2 {
+    text-align: center;
+
+    margin-bottom: 20px;
+}
+
+
+/* QUICK BUTTON */
+
+.quick-menu-button {
+    height: 40px;
+
+    margin-bottom: 18px;
+
+    padding: 0 13px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    background: #a4a4a4;
+
+    border-radius: 10px;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    transition: 0.2s;
+}
+
+
+.quick-menu-button:hover {
+    background: #8e8e8e;
+
+    color: white;
+
+    transform: translateY(-1px);
+}
+
+
+.quick-menu-button i {
+    font-size: 20px;
+}
+
+
+/* ========================================
+   ALERT
+======================================== */
+
+.alert {
+    margin-bottom: 15px;
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 900px) {
+
+    .sipika-sidebar {
+        width: 170px;
+    }
+
+    .sidebar-menu a {
+        font-size: 16px;
+    }
+
+    .dashboard-stats {
+        gap: 15px;
+    }
+
+    .dashboard-bottom {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .sipika-sidebar {
+        width: 70px;
+    }
+
+    .brand {
+        justify-content: center;
+        padding: 0;
+
+        font-size: 0;
+    }
+
+    .brand::after {
+        content: "S";
+        font-size: 26px;
+    }
+
+    .sidebar-menu a {
+        justify-content: center;
+
+        padding: 10px;
+
+        font-size: 0;
+    }
+
+    .sidebar-menu a i {
+        font-size: 22px;
+    }
+
+    .sipika-main {
+        padding: 15px;
+    }
+
+    .page-title {
+        padding-left: 15px;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+
+}
