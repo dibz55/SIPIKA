@@ -17,11 +17,11 @@ class InfaqController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nama_siswa' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
             'kelas' => 'required|string|max:100',
             'tanggal' => 'required|date',
-            'nominal' => 'required|numeric|min:1',
-            'keterangan' => 'nullable|string',
+            'nominal' => 'required|numeric|min:0',
+            'status' => 'required|in:Sudah Diterima,Belum Diterima',
         ]);
 
         Infaq::create($data);
@@ -34,11 +34,11 @@ class InfaqController extends Controller
     public function update(Request $request, Infaq $infaq)
     {
         $data = $request->validate([
-            'nama_siswa' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
             'kelas' => 'required|string|max:100',
             'tanggal' => 'required|date',
-            'nominal' => 'required|numeric|min:1',
-            'keterangan' => 'nullable|string',
+            'nominal' => 'required|numeric|min:0',
+            'status' => 'required|in:Sudah Diterima,Belum Diterima',
         ]);
 
         $infaq->update($data);

@@ -1,173 +1,230 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan')
-
 @section('content')
 
-<div class="card-panel">
+<div class="laporan-page">
 
-    <h5 class="mb-3">Laporan Keuangan</h5>
-
-    {{-- Filter Bulan --}}
-    <form method="GET"
-          action="{{ route('laporan.index') }}"
-          class="d-flex align-items-center gap-2 mb-4">
-
-        <label class="mb-0">Pilih Bulan</label>
-
-        <input
-            type="month"
-            name="bulan"
-            value="{{ $bulan }}"
-            class="form-control"
-            style="max-width:180px;"
-        >
-
-        <button type="submit" class="btn-sipika-green">
-            Tampilkan
-        </button>
+    {{-- HEADER --}}
+    <div class="laporan-header">
+        <div>
+            <h1>Laporan</h1>
+            <p>Laporan Keuangan</p>
+        </div>
 
         <a href="{{ route('laporan.cetak', ['bulan' => $bulan]) }}"
-           class="btn-sipika-red text-decoration-none">
+           target="_blank"
+           class="btn-cetak-laporan">
+            <i class="bi bi-printer-fill"></i>
             Cetak Laporan
         </a>
+    </div>
 
-    </form>
+    {{-- FILTER --}}
+    <div class="laporan-filter">
+        <form method="GET" action="{{ route('laporan.index') }}">
 
+            <div class="filter-group">
 
-    {{-- Ringkasan --}}
-    <div class="row g-3 mb-4">
+                <label for="bulan">Pilih Bulan</label>
 
-        <div class="col-md-4">
-            <div class="card-panel">
-                <small class="text-muted">Total Infaq</small>
-                <h4 class="mt-2">
+                <input
+                    type="month"
+                    name="bulan"
+                    id="bulan"
+                    value="{{ $bulan }}"
+                >
+
+                <button type="submit" class="btn-tampilkan-laporan">
+                    <i class="bi bi-search"></i>
+                    Tampilkan
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+
+    {{-- RINGKASAN --}}
+    <div class="laporan-summary">
+
+        <div class="laporan-card">
+            <div class="laporan-card-icon">
+                <i class="bi bi-wallet2"></i>
+            </div>
+
+            <div>
+                <span>Total Infaq</span>
+                <h2>
                     Rp{{ number_format($totalInfaq, 0, ',', '.') }}
-                </h4>
+                </h2>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card-panel">
-                <small class="text-muted">Total Pengeluaran</small>
-                <h4 class="mt-2">
+        <div class="laporan-card">
+            <div class="laporan-card-icon">
+                <i class="bi bi-cart-dash"></i>
+            </div>
+
+            <div>
+                <span>Total Pengeluaran</span>
+                <h2>
                     Rp{{ number_format($totalPengeluaran, 0, ',', '.') }}
-                </h4>
+                </h2>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card-panel">
-                <small class="text-muted">Saldo</small>
-                <h4 class="mt-2">
+        <div class="laporan-card laporan-card-saldo">
+            <div class="laporan-card-icon">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+
+            <div>
+                <span>Saldo</span>
+                <h2>
                     Rp{{ number_format($saldo, 0, ',', '.') }}
-                </h4>
+                </h2>
             </div>
         </div>
 
     </div>
 
+    {{-- DATA INFAQ --}}
+    <div class="laporan-section">
 
-    {{-- Data Infaq --}}
-    <h5 class="mb-3">Data Infaq</h5>
+        <div class="laporan-section-header">
+            <h2>Data Infaq</h2>
+        </div>
 
-    <table class="sipika-table mb-4">
+        <div class="laporan-table-wrapper">
 
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Tanggal</th>
-                <th>Nominal</th>
-                <th>Status</th>
-            </tr>
-        </thead>
+            <table class="laporan-table">
 
-        <tbody>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Nominal</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
 
-            @forelse($infaqs as $i => $infaq)
+                <tbody>
 
-                <tr>
+                    @forelse($infaqs as $i => $infaq)
 
-                    <td>{{ $i + 1 }}</td>
+                        <tr>
 
-                    <td>
-                        {{ $infaq->tanggal->format('d/m/Y') }}
-                    </td>
+                            <td>
+                                {{ $i + 1 }}
+                            </td>
 
-                    <td>
-                        Rp{{ number_format($infaq->nominal, 0, ',', '.') }}
-                    </td>
+                            <td>
+                                {{ $infaq->tanggal->format('d/m/Y') }}
+                            </td>
 
-                    <td>
-                        {{ $infaq->status }}
-                    </td>
+                            <td>
+                                Rp{{ number_format($infaq->nominal, 0, ',', '.') }}
+                            </td>
 
-                </tr>
+                            <td>
 
-            @empty
+                                @if($infaq->status === 'Sudah Diterima')
 
-                <tr>
-                    <td colspan="4" class="text-center text-muted">
-                        Belum ada data infaq pada bulan ini.
-                    </td>
-                </tr>
+                                    <span class="status-diterima">
+                                        Sudah Diterima
+                                    </span>
 
-            @endforelse
+                                @else
 
-        </tbody>
+                                    <span class="status-belum">
+                                        Belum Diterima
+                                    </span>
 
-    </table>
+                                @endif
 
+                            </td>
 
-    {{-- Data Pengeluaran --}}
-    <h5 class="mb-3">Data Pengeluaran</h5>
+                        </tr>
 
-    <table class="sipika-table">
+                    @empty
 
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Tanggal</th>
-                <th>Keterangan</th>
-                <th>Nominal</th>
-            </tr>
-        </thead>
+                        <tr>
+                            <td colspan="4" class="laporan-empty">
+                                Belum ada data infaq pada bulan ini.
+                            </td>
+                        </tr>
 
-        <tbody>
+                    @endforelse
 
-            @forelse($pengeluarans as $i => $pengeluaran)
+                </tbody>
 
-                <tr>
+            </table>
 
-                    <td>{{ $i + 1 }}</td>
+        </div>
 
-                    <td>
-                        {{ $pengeluaran->tanggal->format('d/m/Y') }}
-                    </td>
+    </div>
 
-                    <td>
-                        {{ $pengeluaran->keterangan }}
-                    </td>
+    {{-- DATA PENGELUARAN --}}
+    <div class="laporan-section">
 
-                    <td>
-                        Rp{{ number_format($pengeluaran->nominal, 0, ',', '.') }}
-                    </td>
+        <div class="laporan-section-header">
+            <h2>Data Pengeluaran</h2>
+        </div>
 
-                </tr>
+        <div class="laporan-table-wrapper">
 
-            @empty
+            <table class="laporan-table">
 
-                <tr>
-                    <td colspan="4" class="text-center text-muted">
-                        Belum ada data pengeluaran pada bulan ini.
-                    </td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Keterangan</th>
+                        <th>Nominal</th>
+                    </tr>
+                </thead>
 
-            @endforelse
+                <tbody>
 
-        </tbody>
+                    @forelse($pengeluarans as $i => $pengeluaran)
 
-    </table>
+                        <tr>
+
+                            <td>
+                                {{ $i + 1 }}
+                            </td>
+
+                            <td>
+                                {{ $pengeluaran->tanggal->format('d/m/Y') }}
+                            </td>
+
+                            <td>
+                                {{ $pengeluaran->keterangan }}
+                            </td>
+
+                            <td>
+                                Rp{{ number_format($pengeluaran->nominal, 0, ',', '.') }}
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+                            <td colspan="4" class="laporan-empty">
+                                Belum ada data pengeluaran pada bulan ini.
+                            </td>
+                        </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

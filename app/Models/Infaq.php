@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Infaq extends Model
 {
     protected $fillable = [
-        'nama_siswa',
+        'nama',
         'kelas',
         'tanggal',
         'nominal',
-        'keterangan',
+        'status',
     ];
 
     protected $casts = [

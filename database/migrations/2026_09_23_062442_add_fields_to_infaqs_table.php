@@ -9,22 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('infaqs', function (Blueprint $table) {
-            $table->date('tanggal')->after('id');
-            $table->decimal('nominal', 15, 2)->after('tanggal');
-            $table->enum('status', ['Sudah Diterima', 'Belum Diterima'])
-                ->default('Sudah Diterima')
-                ->after('nominal');
+            $table->string('nama')->after('tanggal');
+            $table->string('kelas')->after('nama');
         });
     }
 
     public function down(): void
     {
         Schema::table('infaqs', function (Blueprint $table) {
-            $table->dropColumn([
-                'tanggal',
-                'nominal',
-                'status',
-            ]);
+            $table->dropColumn(['nama', 'kelas']);
         });
     }
 };

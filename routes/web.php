@@ -11,13 +11,13 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Halaman Awal
+| Landing page
 |--------------------------------------------------------------------------
 */
 
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+        return view('welcome');
+        })->name('welcome');
 
 
 /*
