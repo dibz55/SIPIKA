@@ -17,33 +17,43 @@ class InfaqController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'nama_siswa' => 'required|string|max:255',
+            'kelas' => 'required|string|max:100',
             'tanggal' => 'required|date',
-            'nominal' => 'required|numeric|min:0',
-            'status' => 'required|in:Sudah Diterima,Belum Diterima',
+            'nominal' => 'required|numeric|min:1',
+            'keterangan' => 'nullable|string',
         ]);
 
         Infaq::create($data);
 
-        return back()->with('success', 'Data infaq berhasil ditambahkan.');
+        return redirect()
+            ->route('infaq.index')
+            ->with('success', 'Data infaq berhasil ditambahkan.');
     }
 
     public function update(Request $request, Infaq $infaq)
     {
         $data = $request->validate([
+            'nama_siswa' => 'required|string|max:255',
+            'kelas' => 'required|string|max:100',
             'tanggal' => 'required|date',
-            'nominal' => 'required|numeric|min:0',
-            'status' => 'required|in:Sudah Diterima,Belum Diterima',
+            'nominal' => 'required|numeric|min:1',
+            'keterangan' => 'nullable|string',
         ]);
 
         $infaq->update($data);
 
-        return back()->with('success', 'Data infaq berhasil diperbarui.');
+        return redirect()
+            ->route('infaq.index')
+            ->with('success', 'Data infaq berhasil diperbarui.');
     }
 
     public function destroy(Infaq $infaq)
     {
         $infaq->delete();
 
-        return back()->with('success', 'Data infaq berhasil dihapus.');
+        return redirect()
+            ->route('infaq.index')
+            ->with('success', 'Data infaq berhasil dihapus.');
     }
 }

@@ -2,21 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Infaq extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
+        'nama_siswa',
+        'kelas',
         'tanggal',
         'nominal',
-        'status',
+        'keterangan',
     ];
 
     protected $casts = [
         'tanggal' => 'date',
-        'nominal' => 'decimal:2',
     ];
 }

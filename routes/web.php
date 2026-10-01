@@ -6,6 +6,7 @@ use App\Http\Controllers\InfaqController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,26 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])
 
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login.submit');
+
+
+/*
+|--------------------------------------------------------------------------
+| Register
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/register', [RegisterController::class, 'show'])
+    ->name('register');
+
+Route::post('/register', [RegisterController::class, 'register'])
+    ->name('register.store');
+
+
+/*
+|--------------------------------------------------------------------------
+| Logout
+|--------------------------------------------------------------------------
+*/
 
 Route::post('/logout', [LoginController::class, 'logout'])
     ->name('logout');

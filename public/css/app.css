@@ -478,3 +478,209 @@ body {
     }
 
 }
+/* ========================================
+   DATA INFAQ
+======================================== */
+
+.infaq-page {
+    width: 100%;
+}
+
+
+/* HEADER */
+
+.infaq-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 28px;
+}
+
+.infaq-header h1 {
+    margin: 0;
+
+    color: white;
+
+    font-size: 30px;
+    font-weight: 700;
+}
+
+
+/* TOMBOL TAMBAH / SIMPAN */
+
+.btn-tambah-infaq {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 20px;
+
+    background: #72aa68;
+
+    border: 0;
+    border-radius: 12px;
+
+    color: white;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-tambah-infaq:hover {
+    background: #62965a;
+
+    color: white;
+}
+
+
+/* TABEL */
+
+.infaq-table-wrapper {
+    overflow-x: auto;
+}
+
+.infaq-table {
+    width: 100%;
+    min-width: 700px;
+
+    border-collapse: separate;
+    border-spacing: 0 12px;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.infaq-table th,
+.infaq-table td {
+    padding: 12px 14px;
+
+    background: white;
+
+    color: #111;
+
+    text-align: left;
+
+    vertical-align: middle;
+}
+
+.infaq-table th:first-child,
+.infaq-table td:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.infaq-table th:last-child,
+.infaq-table td:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.infaq-table thead th {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.infaq-table th:last-child {
+    text-align: center;
+}
+
+
+/* KOLOM AKSI */
+
+.aksi-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    min-width: 210px;
+}
+
+.aksi-column form {
+    margin: 0;
+}
+
+.btn-edit-infaq,
+.btn-hapus-infaq {
+    width: 88px;
+
+    padding: 7px 0;
+
+    border: 0;
+    border-radius: 7px;
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-edit-infaq {
+    background: #ffd33d;
+}
+
+.btn-edit-infaq:hover {
+    background: #e8bf2f;
+}
+
+.btn-hapus-infaq {
+    background: #ff5a5f;
+}
+
+.btn-hapus-infaq:hover {
+    background: #e84a50;
+}
+
+
+/* DATA KOSONG */
+
+.infaq-table td.text-center {
+    text-align: center;
+
+    border-radius: 10px;
+
+    color: #555;
+}
+
+
+/* PAGINATION */
+
+.infaq-pagination {
+    display: flex;
+    justify-content: center;
+
+    margin-top: 10px;
+}
+
+.infaq-pagination nav p {
+    color: white;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+    .infaq-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .infaq-header h1 {
+        font-size: 24px;
+    }
+
+}

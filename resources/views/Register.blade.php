@@ -8,7 +8,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>SIPIKA - Login</title>
+    <title>SIPIKA - Register</title>
 
     <style>
 
@@ -32,7 +32,11 @@
         }
 
 
-        .login-container {
+        /* =========================
+           CONTAINER
+        ========================= */
+
+        .register-container {
 
             width: 900px;
 
@@ -54,10 +58,10 @@
 
 
         /* =========================
-           KIRI
+           BAGIAN KIRI
         ========================= */
 
-        .login-left {
+        .register-left {
 
             width: 45%;
 
@@ -83,7 +87,7 @@
         }
 
 
-        .login-left::before {
+        .register-left::before {
 
             content: "";
 
@@ -101,7 +105,7 @@
         }
 
 
-        .login-left::after {
+        .register-left::after {
 
             content: "";
 
@@ -119,6 +123,10 @@
         }
 
 
+        /* =========================
+           LOGO
+        ========================= */
+
         .logo-circle {
 
             width: 180px;
@@ -133,6 +141,7 @@
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             position: relative;
@@ -157,11 +166,11 @@
         }
 
 
-        .login-left h1 {
+        .register-left h1 {
 
             margin: 25px 0 10px;
 
-            font-size: 32px;
+            font-size: 30px;
 
             letter-spacing: 1px;
 
@@ -171,7 +180,7 @@
         }
 
 
-        .login-left p {
+        .register-left p {
 
             max-width: 330px;
 
@@ -189,7 +198,7 @@
         }
 
 
-        .login-info {
+        .register-info {
 
             margin-top: 25px;
 
@@ -204,14 +213,14 @@
 
 
         /* =========================
-           KANAN
+           BAGIAN KANAN
         ========================= */
 
-        .login-right {
+        .register-right {
 
             width: 55%;
 
-            padding: 50px 60px;
+            padding: 45px 60px;
 
             display: flex;
 
@@ -235,7 +244,7 @@
         }
 
 
-        .login-right h2 {
+        .register-right h2 {
 
             margin: 0;
 
@@ -245,7 +254,7 @@
         }
 
 
-        .login-subtitle {
+        .register-subtitle {
 
             margin: 8px 0 25px;
 
@@ -256,7 +265,7 @@
 
 
         /* =========================
-           ALERT
+           ERROR
         ========================= */
 
         .error {
@@ -271,23 +280,7 @@
 
             margin-bottom: 18px;
 
-            font-size: 14px;
-        }
-
-
-        .success {
-
-            background: #d1e7dd;
-
-            color: #0f5132;
-
-            padding: 11px 13px;
-
-            border-radius: 8px;
-
-            margin-bottom: 18px;
-
-            font-size: 14px;
+            font-size: 13px;
         }
 
 
@@ -297,7 +290,7 @@
 
         .form-group {
 
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
 
@@ -305,7 +298,7 @@
 
             display: block;
 
-            margin-bottom: 8px;
+            margin-bottom: 7px;
 
             color: #333;
 
@@ -319,7 +312,7 @@
 
             width: 100%;
 
-            height: 48px;
+            height: 46px;
 
             padding: 10px 14px;
 
@@ -347,6 +340,10 @@
                 0 0 0 3px rgba(25, 135, 84, 0.12);
         }
 
+
+        /* =========================
+           BUTTON
+        ========================= */
 
         button {
 
@@ -381,10 +378,10 @@
 
 
         /* =========================
-           REGISTER
+           LOGIN LINK
         ========================= */
 
-        .register-link {
+        .login-link {
 
             text-align: center;
 
@@ -396,7 +393,7 @@
         }
 
 
-        .register-link a {
+        .login-link a {
 
             color: #198754;
 
@@ -406,7 +403,7 @@
         }
 
 
-        .register-link a:hover {
+        .login-link a:hover {
 
             text-decoration: underline;
         }
@@ -434,7 +431,7 @@
 
         @media (max-width: 700px) {
 
-            .login-container {
+            .register-container {
 
                 flex-direction: column;
 
@@ -444,7 +441,7 @@
             }
 
 
-            .login-left {
+            .register-left {
 
                 width: 100%;
 
@@ -452,7 +449,7 @@
             }
 
 
-            .login-right {
+            .register-right {
 
                 width: 100%;
 
@@ -463,6 +460,7 @@
             .logo-circle {
 
                 width: 150px;
+
                 height: 150px;
             }
 
@@ -470,6 +468,7 @@
             .logo-circle img {
 
                 width: 105px;
+
                 height: 105px;
             }
         }
@@ -482,12 +481,14 @@
 <body>
 
 
-<div class="login-container">
+<div class="register-container">
 
 
-    <!-- KIRI -->
+    <!-- =========================
+         BAGIAN KIRI
+    ========================= -->
 
-    <div class="login-left">
+    <div class="register-left">
 
         <div class="logo-circle">
 
@@ -506,14 +507,14 @@
         <p>
 
             Sistem Pendataan Infaq Kelas
-            untuk membantu pengelolaan data infaq
-            dan pengeluaran secara lebih mudah dan
-            terstruktur.
+            untuk membantu pengelolaan data
+            infaq dan pengeluaran secara lebih
+            mudah dan terstruktur.
 
         </p>
 
 
-        <div class="login-info">
+        <div class="register-info">
 
             Sistem Informasi Pengelolaan Infaq Kelas
 
@@ -522,9 +523,11 @@
     </div>
 
 
-    <!-- KANAN -->
+    <!-- =========================
+         BAGIAN KANAN
+    ========================= -->
 
-    <div class="login-right">
+    <div class="register-right">
 
 
         <h1 class="sipika-title">
@@ -533,26 +536,13 @@
 
 
         <h2>
-            Selamat Datang
+            Buat Akun
         </h2>
 
 
-        <p class="login-subtitle">
-            Silakan masuk untuk melanjutkan
+        <p class="register-subtitle">
+            Silakan isi data untuk membuat akun baru
         </p>
-
-
-        <!-- SUCCESS -->
-
-        @if (session('success'))
-
-            <div class="success">
-
-                {{ session('success') }}
-
-            </div>
-
-        @endif
 
 
         <!-- ERROR -->
@@ -572,10 +562,32 @@
 
         <form
             method="POST"
-            action="{{ route('login.submit') }}">
+            action="{{ route('register.store') }}">
 
             @csrf
 
+
+            <!-- NAMA -->
+
+            <div class="form-group">
+
+                <label for="name">
+                    Nama
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value="{{ old('name') }}"
+                    placeholder="Masukkan nama"
+                    autocomplete="name"
+                    required>
+
+            </div>
+
+
+            <!-- USERNAME -->
 
             <div class="form-group">
 
@@ -588,13 +600,14 @@
                     id="username"
                     name="username"
                     value="{{ old('username') }}"
-                    autocomplete="username"
                     placeholder="Masukkan username"
-                    required
-                    autofocus>
+                    autocomplete="username"
+                    required>
 
             </div>
 
+
+            <!-- PASSWORD -->
 
             <div class="form-group">
 
@@ -606,32 +619,55 @@
                     type="password"
                     id="password"
                     name="password"
-                    autocomplete="current-password"
                     placeholder="Masukkan password"
+                    autocomplete="new-password"
                     required>
 
             </div>
 
 
+            <!-- KONFIRMASI PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password_confirmation">
+                    Konfirmasi Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password_confirmation"
+                    name="password_confirmation"
+                    placeholder="Ulangi password"
+                    autocomplete="new-password"
+                    required>
+
+            </div>
+
+
+            <!-- BUTTON -->
+
             <button type="submit">
-                Login
+                Daftar
             </button>
 
         </form>
 
 
-        <!-- REGISTER -->
+        <!-- LOGIN -->
 
-        <div class="register-link">
+        <div class="login-link">
 
-            Belum punya akun?
+            Sudah punya akun?
 
-            <a href="{{ route('register') }}">
-                Daftar sekarang
+            <a href="{{ route('login') }}">
+                Login di sini
             </a>
 
         </div>
 
+
+        <!-- FOOTER -->
 
         <div class="footer">
 
