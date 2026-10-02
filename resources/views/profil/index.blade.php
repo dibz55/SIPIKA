@@ -1,214 +1,192 @@
 @extends('layouts.app')
 
-@section('title', 'Profil')
-
 @section('content')
 
-<div class="card-panel">
+<div class="profil-page">
 
-    <h5 class="mb-4">
-        Profil Administrator
-    </h5>
+    
+<div class="profil-header">
+    <h1>Profil Administrator</h1>
+</div>
 
-    <div class="row">
+<div class="profil-card">
 
-        {{-- FOTO PROFIL --}}
+    {{-- FOTO PROFIL --}}
+    <div class="profil-photo-section">
 
-        <div class="col-md-3 text-center">
+        <div class="profil-photo-wrapper" id="profilPhotoPreview">
 
-            <img
-                src="{{ $user->foto_profil
-                    ? asset('storage/' . $user->foto_profil)
-                    : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) }}"
-                class="profile-photo mb-3"
-                alt="Foto profil">
+            @if(auth()->user()->foto_profil)
+                <img
+                    src="{{ asset('storage/' . auth()->user()->foto_profil) }}"
+                    alt="Foto Profil"
+                    class="profil-photo"
+                >
+            @else
+                <div class="profil-photo-placeholder">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+            @endif
 
         </div>
 
+        <label for="foto_profil" class="btn-ubah-profil">
+            Ubah Profil
+        </label>
 
-        {{-- DATA PROFIL --}}
-
-        <div class="col-md-9">
-
-            <form
-                method="POST"
-                action="{{ route('profil.update') }}"
-                enctype="multipart/form-data">
-
-                @csrf
-                @method('PUT')
+    </div>
 
 
-                <div class="mb-3">
+    {{-- FORM PROFIL --}}
+    <div class="profil-form-section">
 
-                    <label class="form-label">
-                        Nama
-                    </label>
+        <form
+            action="{{ route('profil.update') }}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
 
-                    <input
-                        type="text"
-                        name="name"
-                        class="form-control"
-                        value="{{ old('name', $user->name) }}"
-                        maxlength="100"
-                        required>
+            @csrf
+            @method('PUT')
 
-                </div>
-
-
-                <div class="mb-3">
-
-                    <label class="form-label">
-                        Email
-                    </label>
-
-                    <input
-                        type="email"
-                        name="email"
-                        class="form-control"
-                        value="{{ old('email', $user->email) }}"
-                        maxlength="150"
-                        required>
-
-                </div>
+            <input
+                type="file"
+                id="foto_profil"
+                name="foto_profil"
+                accept="image/*"
+                hidden
+            >
 
 
-                <div class="mb-3">
+            {{-- NAMA --}}
+            <div class="profil-form-group">
 
-                    <label class="form-label">
-                        Foto Profil
-                    </label>
+                <label for="nama">Nama</label>
 
-                    <input
-                        type="file"
-                        name="foto_profil"
-                        class="form-control"
-                        accept="image/*">
+                <input
+                    type="text"
+                    id="nama"
+                    name="name"
+                    value="{{ old('name', auth()->user()->name) }}"
+                    class="profil-input"
+                    required
+                >
 
-                    <small class="text-muted">
-                        Maksimal ukuran 2 MB.
-                    </small>
-
-                </div>
+            </div>
 
 
-                <button
-                    type="submit"
-                    class="btn-sipika-green">
+            {{-- EMAIL --}}
+            <div class="profil-form-group">
 
-                    Simpan Perubahan
+                <label for="email">Email</label>
 
-                </button>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="{{ old('email', auth()->user()->email) }}"
+                    class="profil-input"
+                    required
+                >
 
+            </div>
+
+
+            {{-- GANTI AKUN --}}
+            <div class="profil-account-wrapper">
 
                 <button
                     type="button"
-                    class="btn btn-outline-secondary"
-                    data-bs-toggle="modal"
-                    data-bs-target="#gantiAkunModal">
-
-                    Ganti Password
-
+                    class="btn-ganti-akun"
+                >
+                    Ganti akun
                 </button>
 
-            </form>
-
-        </div>
-
-    </div>
-
-</div>
+            </div>
 
 
-{{-- MODAL GANTI PASSWORD --}}
+            {{-- SIMPAN --}}
+            <div class="profil-save-wrapper">
 
-<div
-    class="modal fade"
-    id="gantiAkunModal"
-    tabindex="-1">
+                <button
+                    type="submit"
+                    class="btn-simpan-profil"
+                >
+                    Simpan Perubahan
+                </button>
 
-    <div class="modal-dialog">
+            </div>
 
-        <div class="modal-content">
-
-            <form
-                method="POST"
-                action="{{ route('profil.ganti-akun') }}">
-
-                @csrf
-                @method('PUT')
-
-
-                <div class="modal-header">
-
-                    <h6 class="modal-title">
-                        Ganti Password
-                    </h6>
-
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal">
-                    </button>
-
-                </div>
-
-
-                <div class="modal-body">
-
-                    <label class="form-label">
-                        Password Baru
-                    </label>
-
-                    <input
-                        type="password"
-                        name="password"
-                        class="form-control mb-3"
-                        minlength="6"
-                        required>
-
-
-                    <label class="form-label">
-                        Konfirmasi Password
-                    </label>
-
-                    <input
-                        type="password"
-                        name="password_confirmation"
-                        class="form-control"
-                        minlength="6"
-                        required>
-
-                </div>
-
-
-                <div class="modal-footer">
-
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal">
-
-                        Batal
-
-                    </button>
-
-                    <button
-                        type="submit"
-                        class="btn-sipika-green">
-
-                        Simpan
-
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
+        </form>
 
     </div>
 
 </div>
+
+
+{{-- SUCCESS --}}
+@if(session('success'))
+
+    <div class="profil-alert profil-alert-success">
+        {{ session('success') }}
+    </div>
+
+@endif
+
+
+{{-- ERROR --}}
+@if($errors->any())
+
+    <div class="profil-alert profil-alert-error">
+
+        @foreach($errors->all() as $error)
+            <div>{{ $error }}</div>
+        @endforeach
+
+    </div>
+
+@endif
+
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const input = document.getElementById('foto_profil');
+    const preview = document.getElementById('profilPhotoPreview');
+
+    if (!input || !preview) {
+        return;
+    }
+
+    input.addEventListener('change', function () {
+
+        const file = this.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+
+            preview.innerHTML = `
+                <img
+                    src="${event.target.result}"
+                    alt="Preview Foto Profil"
+                    class="profil-photo"
+                >
+            `;
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+});
+</script>
 
 @endsection

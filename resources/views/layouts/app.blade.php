@@ -121,7 +121,15 @@
 
             <div class="topbar-profile">
 
-                <i class="bi bi-person-circle"></i>
+           @if(auth()->user()->foto_profil)
+            <img
+                src="{{ asset('storage/' . auth()->user()->foto_profil) }}"
+                alt="Foto Profil"
+                class="topbar-profile-img"
+                        >
+                    @else
+                        <i class="bi bi-person-circle"></i>
+                    @endif
 
             </div>
 
