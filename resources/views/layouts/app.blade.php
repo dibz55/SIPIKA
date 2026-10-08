@@ -112,9 +112,9 @@
         {{-- TOPBAR --}}
         <header class="sipika-topbar">
 
-            <button type="button" class="hamburger">
+            <button type="button" id="sidebarToggle" class="hamburger">
 
-                <i class="bi bi-list"></i>
+                <i class="bi bi-arrow-left"></i>
 
             </button>
 
@@ -166,7 +166,33 @@
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const wrapper = document.querySelector('.sipika-wrapper');
+            const toggle = document.getElementById('sidebarToggle');
+
+            if (!wrapper || !toggle) {
+                return;
+            }
+
+            toggle.addEventListener('click', function () {
+
+                wrapper.classList.toggle('sidebar-collapsed');
+
+                const icon = toggle.querySelector('i');
+
+                if (wrapper.classList.contains('sidebar-collapsed')) {
+                    icon.classList.remove('bi-arrow-left');
+                    icon.classList.add('bi-arrow-right');
+                } else {
+                    icon.classList.remove('bi-arrow-right');
+                    icon.classList.add('bi-arrow-left');
+                }
+
+            });
+
+        });
 </script>
 
 @stack('scripts')
