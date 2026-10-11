@@ -2,14 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pengeluaran;
+use App\Services\GoogleSheetService;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PengeluaranController extends Controller
 {
+    protected GoogleSheetService $googleSheet;
+
+    public function __construct(GoogleSheetService $googleSheet)
+    {
+        $this->googleSheet = $googleSheet;
+    }
+
     public function index()
     {
-        $pengeluarans = Pengeluaran::orderByDesc('tanggal')->paginate(10);
+        $response = $this->googleSheet->get('Pengeluaran');
+
+        if (!($response['success'] ?? false)) {
+            throw new \RuntimeException(
+                $response['message'] ?? 'Gagal mengambil data pengeluaran.'
+            );
+        }
+
+        $data = collect($response['data'] ?? [])
+            ->sortByDesc('Tanggal')
+            ->values();
+
+        $perPage = 10;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+
+        $items = $data
+            ->slice(($currentPage - 1) * $perPage, $perPage)
+            ->values()
+            ->map(fn ($item) => (object) [
+                '_row' => $item['_row'],
+                'tanggal' => $item['Tanggal'] ?? '',
+                'keterangan' => $item['Keterangan'] ?? '',
+                'nominal' => $item['Nominal'] ?? 0,
+            ]);
+
+        $pengeluarans = new LengthAwarePaginator(
+            $items,
+            $data->count(),
+            $perPage,
+            $currentPage,
+            [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ]
+        );
 
         return view('pengeluaran.index', compact('pengeluarans'));
     }
@@ -22,28 +64,86 @@ class PengeluaranController extends Controller
             'nominal' => 'required|numeric|min:0',
         ]);
 
-        Pengeluaran::create($data);
+        $response = $this->googleSheet->post([
+            'sheet' => 'Pengeluaran',
+            'action' => 'add',
+            'tanggal' => $data['tanggal'],
+            'keterangan' => $data['keterangan'],
+            'nominal' => $data['nominal'],
+        ]);
 
-        return back()->with('success', 'Data pengeluaran berhasil ditambahkan.');
+        if (!($response['success'] ?? false)) {
+            return back()->withInput()->withErrors([
+                'google_sheet' => $response['message']
+                    ?? 'Gagal menambahkan data pengeluaran.',
+            ]);
+        }
+
+        return redirect()
+            ->route('pengeluaran.index')
+            ->with('success', 'Data pengeluaran berhasil ditambahkan.');
     }
 
-    public function update(Request $request, Pengeluaran $pengeluaran)
+    public function update(Request $request, $pengeluaran)
     {
         $data = $request->validate([
+            '_row' => 'required|integer|min:2',
             'tanggal' => 'required|date',
             'keterangan' => 'required|string|max:150',
             'nominal' => 'required|numeric|min:0',
         ]);
 
-        $pengeluaran->update($data);
+        $response = $this->googleSheet->post([
+            'sheet' => 'Pengeluaran',
+            'action' => 'update',
+            '_row' => (int) $data['_row'],
+            'tanggal' => $data['tanggal'],
+            'keterangan' => $data['keterangan'],
+            'nominal' => $data['nominal'],
+        ]);
 
-        return back()->with('success', 'Data pengeluaran berhasil diperbarui.');
+        if (!($response['success'] ?? false)) {
+            return back()->withInput()->withErrors([
+                'google_sheet' => $response['message']
+                    ?? 'Gagal memperbarui data pengeluaran.',
+            ]);
+        }
+
+        return redirect()
+            ->route('pengeluaran.index')
+            ->with('success', 'Data pengeluaran berhasil diperbarui.');
     }
 
-    public function destroy(Pengeluaran $pengeluaran)
+    public function destroy($pengeluaran)
     {
-        $pengeluaran->delete();
+        $row = request()->input('_row', $pengeluaran);
 
-        return back()->with('success', 'Data pengeluaran berhasil dihapus.');
+        if (!is_numeric($row) || (int) $row < 2) {
+            return redirect()
+                ->route('pengeluaran.index')
+                ->withErrors([
+                    'google_sheet' => 'Nomor baris data tidak valid.',
+                ]);
+        }
+
+        $response = $this->googleSheet->post([
+            'sheet' => 'Pengeluaran',
+            'action' => 'delete',
+            '_row' => (int) $row,
+        ]);
+
+        if (!($response['success'] ?? false)) {
+            return redirect()
+                ->route('pengeluaran.index')
+                ->withErrors([
+                    'google_sheet' => $response['message']
+                        ?? 'Gagal menghapus data pengeluaran.',
+                ]);
+        }
+
+        return redirect()
+            ->route('pengeluaran.index')
+            ->with('success', 'Data pengeluaran berhasil dihapus.');
     }
 }
+
