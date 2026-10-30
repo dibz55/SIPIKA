@@ -11,7 +11,7 @@ class Infaq extends Model
         'kelas',
         'tanggal',
         'nominal',
-        'status',
+        'keterangan',
     ];
 
     protected $casts = [

@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
     /**
-     * Menampilkan halaman register
+     * Menampilkan halaman register.
      */
     public function show()
     {
@@ -17,52 +16,55 @@ class RegisterController extends Controller
     }
 
     /**
-     * Proses register
+     * Proses registrasi akun baru.
      */
     public function register(Request $request)
     {
-        $data = $request->validate(
-            [
-                'name' => [
-                    'required',
-                    'string',
-                    'max:255',
-                ],
-
-                'username' => [
-                    'required',
-                    'string',
-                    'max:255',
-                    'unique:users,email',
-                ],
-
-                'password' => [
-                    'required',
-                    'string',
-                    'min:6',
-                    'confirmed',
-                ],
+        $data = $request->validate([
+            'username' => [
+                'required',
+                'string',
+                'max:50',
+                'alpha_dash',
+                'unique:users,username',
             ],
-            [
-                'name.required' => 'Nama wajib diisi.',
 
-                'username.required' => 'Username wajib diisi.',
-                'username.unique' => 'Username sudah digunakan.',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                'unique:users,email',
+            ],
 
-                'password.required' => 'Password wajib diisi.',
-                'password.min' => 'Password minimal 6 karakter.',
-                'password.confirmed' => 'Konfirmasi password tidak cocok.',
-            ]
-        );
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
+        ], [
+            'username.required' => 'Username wajib diisi.',
+            'username.unique' => 'Username sudah digunakan.',
+            'username.alpha_dash' => 'Username hanya boleh menggunakan huruf, angka, garis bawah, dan tanda strip.',
+
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah digunakan.',
+
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak sama.',
+        ]);
 
         User::create([
-            'name' => $data['name'],
-            'email' => $data['username'],
-            'password' => Hash::make($data['password']),
+            'name' => $data['username'],
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => $data['password'],
         ]);
 
         return redirect()
             ->route('login')
-            ->with('success', 'Registrasi berhasil. Silakan login.');
+            ->with('success', 'Akun berhasil dibuat. Silakan login menggunakan username dan password.');
     }
 }

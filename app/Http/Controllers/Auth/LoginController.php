@@ -8,38 +8,55 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    /**
+     * Menampilkan halaman login.
+     */
     public function showLoginForm()
     {
-        if (Auth::check()) {
-            return redirect()->route('dashboard');
-        }
-
         return view('auth.login');
     }
 
+    /**
+     * Proses login menggunakan username dan password.
+     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'username' => ['required', 'string'],
-            'password' => ['required', 'string'],
+            'username' => [
+                'required',
+                'string',
+            ],
+
+            'password' => [
+                'required',
+                'string',
+            ],
+        ], [
+            'username.required' => 'Username wajib diisi.',
+            'password.required' => 'Password wajib diisi.',
         ]);
 
-        $attempt = [
-            'email' => $credentials['username'],
+        if (Auth::attempt([
+            'username' => $credentials['username'],
             'password' => $credentials['password'],
-        ];
+        ], $request->boolean('remember'))) {
 
-        if (Auth::attempt($attempt, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('dashboard'));
+            return redirect()
+                ->intended(route('dashboard'));
         }
 
-        return back()->withErrors([
-            'username' => 'Username atau password salah.',
-        ])->onlyInput('username');
+        return back()
+            ->withErrors([
+                'username' => 'Username atau password salah.',
+            ])
+            ->onlyInput('username');
     }
 
+    /**
+     * Logout.
+     */
     public function logout(Request $request)
     {
         Auth::logout();
@@ -47,6 +64,7 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()
+            ->route('login');
     }
 }

@@ -19,7 +19,7 @@
         </a>
     </div>
 
-    {{-- PESAN ERROR --}}
+    {{-- ERROR --}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul class="mb-0">
@@ -30,18 +30,17 @@
         </div>
     @endif
 
-    {{-- FILTER --}}
+    {{-- FILTER BULAN --}}
     <div class="laporan-filter">
         <form method="GET" action="{{ route('laporan.index') }}">
             <div class="filter-group">
                 <label for="bulan">Pilih Bulan</label>
 
-                <input
-                    type="month"
-                    name="bulan"
-                    id="bulan"
-                    value="{{ $bulan }}"
-                    required>
+                <input type="month"
+                       name="bulan"
+                       id="bulan"
+                       value="{{ $bulan }}"
+                       required>
 
                 <button type="submit" class="btn-tampilkan-laporan">
                     <i class="bi bi-search"></i>
@@ -109,19 +108,10 @@
                     @forelse($infaqs as $i => $infaq)
                         <tr>
                             <td>{{ $i + 1 }}</td>
-
                             <td>{{ $infaq->nama }}</td>
-
                             <td>{{ $infaq->kelas }}</td>
-
-                            <td>
-                                {{ \Carbon\Carbon::parse($infaq->tanggal)->format('d/m/Y') }}
-                            </td>
-
-                            <td>
-                                Rp{{ number_format($infaq->nominal, 0, ',', '.') }}
-                            </td>
-
+                            <td>{{ \Carbon\Carbon::parse($infaq->tanggal)->format('d/m/Y') }}</td>
+                            <td>Rp{{ number_format($infaq->nominal, 0, ',', '.') }}</td>
                             <td>{{ $infaq->keterangan }}</td>
                         </tr>
                     @empty
@@ -157,16 +147,9 @@
                     @forelse($pengeluarans as $i => $pengeluaran)
                         <tr>
                             <td>{{ $i + 1 }}</td>
-
-                            <td>
-                                {{ \Carbon\Carbon::parse($pengeluaran->tanggal)->format('d/m/Y') }}
-                            </td>
-
+                            <td>{{ \Carbon\Carbon::parse($pengeluaran->tanggal)->format('d/m/Y') }}</td>
                             <td>{{ $pengeluaran->keterangan }}</td>
-
-                            <td>
-                                Rp{{ number_format($pengeluaran->nominal, 0, ',', '.') }}
-                            </td>
+                            <td>Rp{{ number_format($pengeluaran->nominal, 0, ',', '.') }}</td>
                         </tr>
                     @empty
                         <tr>
@@ -180,7 +163,24 @@
         </div>
     </div>
 
+    {{-- PENGESAHAN --}}
+    <div class="laporan-pengesahan">
+        <table>
+            <tr>
+                <td>
+                    <strong>Bendahara Sekolah</strong>
+                    <div class="ttd-space"></div>
+                    <strong class="nama-pejabat">(........................................)</strong>
+                </td>
+                <td>
+                    <strong>Kepala Madrasah</strong>
+                    <div class="ttd-space"></div>
+                    <strong class="nama-pejabat">(........................................)</strong>
+                </td>
+            </tr>
+        </table>
+    </div>
+
 </div>
 
 @endsection
-

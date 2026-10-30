@@ -3,7 +3,7 @@
 return [
 
     'google_sheet' => [
-        'url' => env('SIPIKA_APPS_SCRIPT_URL'),
+        'url' => env('SIPIS_APPS_SCRIPT_URL'),
     ],
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),

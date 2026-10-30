@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -9,15 +10,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('infaqs', function (Blueprint $table) {
-            $table->string('nama')->after('tanggal');
-            $table->string('kelas')->after('nama');
+            $table->string('keterangan')->nullable()->after('nominal');
+            $table->dropColumn('status');
         });
     }
 
     public function down(): void
     {
         Schema::table('infaqs', function (Blueprint $table) {
-            $table->dropColumn(['nama', 'kelas']);
+            $table->enum('status', [
+                'Sudah Diterima',
+                'Belum Diterima',
+            ])->default('Sudah Diterima');
+
+            $table->dropColumn('keterangan');
         });
     }
 };

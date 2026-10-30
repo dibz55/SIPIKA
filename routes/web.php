@@ -8,6 +8,9 @@ use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\InfaqMassalController;
+use App\Http\Controllers\SiswaSyncController;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,5 +142,25 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/profil/ganti-akun', [ProfilController::class, 'gantiAkun'])
         ->name('profil.ganti-akun');
+    Route::get('/infaq-massal', [
+        InfaqMassalController::class,
+        'index'
+         ])->name('infaq.massal');
+
+    Route::get('/infaq-massal/siswa', [
+        InfaqMassalController::class,
+        'siswa'
+        ])->name('infaq.massal.siswa');
+
+    Route::post('/infaq-massal', [
+        InfaqMassalController::class,
+        'store'
+        ])->name('infaq.massal.store');
+        
+    // Import Data Siswa dari CSV
+    Route::post('/siswa/import', [SiswaController::class, 'import'])
+         ->name('siswa.import');
+    Route::post('/siswa/sinkronisasi', [SiswaSyncController::class, 'sync'])
+         ->name('siswa.sync');
 
 });

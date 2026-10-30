@@ -12,30 +12,26 @@
 <div class="profil-card">
 
     {{-- FOTO PROFIL --}}
-    <div class="profil-photo-section">
-
-        <div class="profil-photo-wrapper" id="profilPhotoPreview">
-
-            @if(auth()->user()->foto_profil)
-                <img
-                    src="{{ asset('storage/' . auth()->user()->foto_profil) }}"
-                    alt="Foto Profil"
-                    class="profil-photo"
-                >
-            @else
-                <div class="profil-photo-placeholder">
-                    <i class="bi bi-person-fill"></i>
+            <div class="profil-photo-section">
+                <div class="profil-photo-wrapper" id="profilPhotoPreview">
+                    @if(auth()->user()->foto_profil)
+                        <img
+                            src="{{ asset('storage/' . auth()->user()->foto_profil) }}?v={{ time() }}"
+                            alt="Foto Profil"
+                            class="profil-photo"
+                            onerror="this.style.display='none';"
+                        >
+                    @else
+                        <div class="profil-photo-placeholder">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                    @endif
                 </div>
-            @endif
 
-        </div>
-
-        <label for="foto_profil" class="btn-ubah-profil">
-            Ubah Profil
-        </label>
-
-    </div>
-
+                <label for="foto_profil" class="btn-ubah-profil">
+                    Ubah Profil
+                </label>
+            </div>
 
     {{-- FORM PROFIL --}}
     <div class="profil-form-section">

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\GoogleSheetService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 class LaporanController extends Controller
 {
@@ -18,34 +17,24 @@ class LaporanController extends Controller
 
     public function index(Request $request)
     {
-        $request->validate([
-            'bulan' => 'nullable|date_format:Y-m',
-        ]);
-
         $bulan = $request->input('bulan', now()->format('Y-m'));
 
-        $laporan = $this->ambilDataLaporan($bulan);
+        if (!preg_match('/^\d{4}-\d{2}$/', $bulan)) {
+            $bulan = now()->format('Y-m');
+        }
 
-        return view('laporan.index', array_merge(
-            ['bulan' => $bulan],
-            $laporan
-        ));
+        return view('laporan.index', $this->ambilDataLaporan($bulan));
     }
 
     public function cetak(Request $request)
     {
-        $request->validate([
-            'bulan' => 'nullable|date_format:Y-m',
-        ]);
-
         $bulan = $request->input('bulan', now()->format('Y-m'));
 
-        $laporan = $this->ambilDataLaporan($bulan);
+        if (!preg_match('/^\d{4}-\d{2}$/', $bulan)) {
+            $bulan = now()->format('Y-m');
+        }
 
-        return view('laporan.pdf', array_merge(
-            ['bulan' => $bulan],
-            $laporan
-        ));
+        return view('laporan.pdf', $this->ambilDataLaporan($bulan));
     }
 
     private function ambilDataLaporan(string $bulan): array
@@ -55,49 +44,94 @@ class LaporanController extends Controller
 
         if (!($responseInfaq['success'] ?? false)) {
             throw new \RuntimeException(
-                $responseInfaq['message'] ?? 'Gagal mengambil data infaq.'
+                $responseInfaq['message'] ?? 'Gagal mengambil data Infaq.'
             );
         }
 
         if (!($responsePengeluaran['success'] ?? false)) {
             throw new \RuntimeException(
-                $responsePengeluaran['message'] ?? 'Gagal mengambil data pengeluaran.'
+                $responsePengeluaran['message'] ?? 'Gagal mengambil data Pengeluaran.'
             );
         }
 
-        $infaqs = collect($responseInfaq['data'] ?? [])
-            ->map(function ($item) {
-                $tanggal = $this->normalisasiTanggal(
-                    $item['Tanggal'] ?? ''
-                );
+        $normalisasi = function ($item) {
+            $hasil = [];
 
-                return (object) [
-                    'nama' => $item['Nama'] ?? '',
-                    'nama_siswa' => $item['Nama'] ?? '',
-                    'kelas' => $item['Kelas'] ?? '',
-                    'tanggal' => $tanggal,
-                    'nominal' => (float) ($item['Nominal'] ?? 0),
-                    'keterangan' => $item['Keterangan'] ?? '',
-                ];
-            })
-            ->filter(fn ($item) => $item->tanggal !== ''
-                && substr($item->tanggal, 0, 7) === $bulan)
-            ->sortBy('tanggal')
+            foreach ((array) $item as $key => $value) {
+                $key = strtolower(trim(
+                    preg_replace('/^\xEF\xBB\xBF/', '', (string) $key)
+                ));
+
+                $hasil[$key] = $value;
+            }
+
+            return $hasil;
+        };
+
+        $dataInfaq = collect($responseInfaq['data'] ?? [])
+            ->map($normalisasi);
+
+        $dataPengeluaran = collect($responsePengeluaran['data'] ?? [])
+            ->map($normalisasi);
+
+        $nominalAngka = function ($nilai): float {
+            if (is_numeric($nilai)) {
+                return (float) $nilai;
+            }
+
+            $nilai = preg_replace('/[^\d,.-]/u', '', (string) $nilai);
+
+            if ($nilai === '' || $nilai === null) {
+                return 0;
+            }
+
+            if (str_contains($nilai, ',')) {
+                $nilai = str_replace('.', '', $nilai);
+                $nilai = str_replace(',', '.', $nilai);
+            } else {
+                $nilai = str_replace('.', '', $nilai);
+            }
+
+            return is_numeric($nilai) ? (float) $nilai : 0;
+        };
+
+        $awalBulan = Carbon::createFromFormat('!Y-m', $bulan);
+        $akhirBulan = $awalBulan->copy()->endOfMonth();
+
+        $dalamBulan = function ($item) use ($awalBulan, $akhirBulan) {
+            $tanggal = $item['tanggal'] ?? null;
+
+            if (empty($tanggal)) {
+                return false;
+            }
+
+            try {
+                $tanggal = Carbon::parse($tanggal);
+
+                return $tanggal->betweenIncluded($awalBulan, $akhirBulan);
+            } catch (\Throwable $e) {
+                return false;
+            }
+        };
+
+        $infaqs = $dataInfaq
+            ->filter($dalamBulan)
+            ->map(fn ($item) => (object) [
+                'nama' => $item['nama'] ?? '',
+                'kelas' => $item['kelas'] ?? '',
+                'tanggal' => $item['tanggal'] ?? '',
+                'nominal' => $nominalAngka($item['nominal'] ?? 0),
+                'keterangan' => $item['keterangan'] ?? '',
+            ])
             ->values();
 
-        $pengeluarans = collect($responsePengeluaran['data'] ?? [])
-            ->map(function ($item) {
-                return (object) [
-                    'tanggal' => $this->normalisasiTanggal(
-                        $item['Tanggal'] ?? ''
-                    ),
-                    'keterangan' => $item['Keterangan'] ?? '',
-                    'nominal' => (float) ($item['Nominal'] ?? 0),
-                ];
-            })
-            ->filter(fn ($item) => $item->tanggal !== ''
-                && substr($item->tanggal, 0, 7) === $bulan)
-            ->sortBy('tanggal')
+        $pengeluarans = $dataPengeluaran
+            ->filter($dalamBulan)
+            ->map(fn ($item) => (object) [
+                'tanggal' => $item['tanggal'] ?? '',
+                'keterangan' => $item['keterangan'] ?? '',
+                'nominal' => $nominalAngka($item['nominal'] ?? 0),
+            ])
             ->values();
 
         $totalInfaq = $infaqs->sum('nominal');
@@ -105,6 +139,7 @@ class LaporanController extends Controller
         $saldo = $totalInfaq - $totalPengeluaran;
 
         return compact(
+            'bulan',
             'infaqs',
             'pengeluarans',
             'totalInfaq',
@@ -112,27 +147,4 @@ class LaporanController extends Controller
             'saldo'
         );
     }
-
-    private function normalisasiTanggal($tanggal): string
-    {
-        if (empty($tanggal)) {
-            return '';
-        }
-
-        try {
-            $tanggal = (string) $tanggal;
-
-            // Tanggal ISO dari Google Sheets dapat menggunakan UTC.
-            if (preg_match('/T.*(?:Z|[+-]\d{2}:\d{2})$/', $tanggal)) {
-                return Carbon::parse($tanggal)
-                    ->setTimezone(config('app.timezone'))
-                    ->format('Y-m-d');
-            }
-
-            return Carbon::parse($tanggal)->format('Y-m-d');
-        } catch (\Throwable $e) {
-            return '';
-        }
-    }
 }
-

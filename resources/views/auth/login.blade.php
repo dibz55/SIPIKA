@@ -8,7 +8,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>SIPIKA - Login</title>
+    <title>SIPIS - Login</title>
 
     <style>
 
@@ -505,7 +505,7 @@
 
         <p>
 
-            Sistem Pendataan Infaq Kelas
+            Sistem Pendataan Infaq Siswa
             untuk membantu pengelolaan data infaq
             dan pengeluaran secara lebih mudah dan
             terstruktur.
@@ -515,7 +515,7 @@
 
         <div class="login-info">
 
-            Sistem Informasi Pengelolaan Infaq Kelas
+            Sistem Informasi Pengelolaan Infaq Siswa
 
         </div>
 
@@ -527,8 +527,8 @@
     <div class="login-right">
 
 
-        <h1 class="sipika-title">
-            SIPIKA
+        <h1 class="sipis-title">
+            SIPIS
         </h1>
 
 
@@ -577,23 +577,21 @@
             @csrf
 
 
-            <div class="form-group">
+            
+               
+                <div class="form-group">
+                    <label for="username">Username</label>
 
-                <label for="username">
-                    Username
-                </label>
-
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    value="{{ old('username') }}"
-                    autocomplete="username"
-                    placeholder="Masukkan username"
-                    required
-                    autofocus>
-
-            </div>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        value="{{ old('username') }}"
+                        autocomplete="username"
+                        placeholder="Masukkan username"
+                        required
+                        autofocus>
+                </div>
 
 
             <div class="form-group">
@@ -635,7 +633,7 @@
 
         <div class="footer">
 
-            © {{ date('Y') }} SIPIKA
+            © {{ date('Y') }} SIPIS
 
         </div>
 

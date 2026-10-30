@@ -15,6 +15,7 @@ class PengeluaranController extends Controller
         $this->googleSheet = $googleSheet;
     }
 
+    
     public function index()
     {
         $response = $this->googleSheet->get('Pengeluaran');
@@ -26,23 +27,36 @@ class PengeluaranController extends Controller
         }
 
         $data = collect($response['data'] ?? [])
-            ->sortByDesc('Tanggal')
+            ->map(function ($item) {
+                $row = [];
+
+                foreach ((array) $item as $key => $value) {
+                    $key = strtolower(trim(
+                        preg_replace('/^\xEF\xBB\xBF/', '', (string) $key)
+                    ));
+
+                    $row[$key] = $value;
+                }
+
+                return (object) [
+                    '_row' => $row['_row'] ?? null,
+                    'tanggal' => $row['tanggal'] ?? '',
+                    'keterangan' => $row['keterangan'] ?? '',
+                    'nominal' => $row['nominal'] ?? 0,
+                ];
+            })
+            ->filter(fn ($item) => $item->_row !== null)
+            ->sortByDesc('tanggal')
             ->values();
 
         $perPage = 10;
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage();
 
         $items = $data
             ->slice(($currentPage - 1) * $perPage, $perPage)
-            ->values()
-            ->map(fn ($item) => (object) [
-                '_row' => $item['_row'],
-                'tanggal' => $item['Tanggal'] ?? '',
-                'keterangan' => $item['Keterangan'] ?? '',
-                'nominal' => $item['Nominal'] ?? 0,
-            ]);
+            ->values();
 
-        $pengeluarans = new LengthAwarePaginator(
+        $pengeluarans = new \Illuminate\Pagination\LengthAwarePaginator(
             $items,
             $data->count(),
             $perPage,

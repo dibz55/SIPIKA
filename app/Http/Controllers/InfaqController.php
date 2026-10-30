@@ -16,6 +16,7 @@ class InfaqController extends Controller
         $this->googleSheet = $googleSheet;
     }
 
+    
     public function index()
     {
         $response = $this->googleSheet->get('Infaq');
@@ -26,22 +27,38 @@ class InfaqController extends Controller
             );
         }
 
+        // Normalisasi nama header agar spasi dan kapitalisasi tidak bermasalah.
         $data = collect($response['data'] ?? [])
-            ->sortByDesc('Tanggal')
+            ->map(function ($item) {
+                $row = [];
+
+                foreach ((array) $item as $key => $value) {
+                    $key = strtolower(trim(
+                        preg_replace('/^\xEF\xBB\xBF/', '', (string) $key)
+                    ));
+
+                    $row[$key] = $value;
+                }
+
+                return (object) [
+                    '_row' => $row['_row'] ?? null,
+                    'nama' => $row['nama'] ?? '',
+                    'kelas' => $row['kelas'] ?? '',
+                    'tanggal' => $row['tanggal'] ?? '',
+                    'nominal' => $row['nominal'] ?? 0,
+                    'keterangan' => $row['keterangan'] ?? '',
+                ];
+            })
+            ->filter(fn ($item) => $item->_row !== null)
+            ->sortByDesc('tanggal')
             ->values();
 
         $perPage = 10;
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $items = $data->slice(($currentPage - 1) * $perPage, $perPage)
-            ->values()
-            ->map(fn ($item) => (object) [
-                '_row' => $item['_row'],
-                'nama' => $item['Nama'] ?? '',
-                'kelas' => $item['Kelas'] ?? '',
-                'tanggal' => $item['Tanggal'] ?? '',
-                'nominal' => $item['Nominal'] ?? 0,
-                'keterangan' => $item['Keterangan'] ?? '',
-            ]);
+
+        $items = $data
+            ->slice(($currentPage - 1) * $perPage, $perPage)
+            ->values();
 
         $infaqs = new LengthAwarePaginator(
             $items,

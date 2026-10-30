@@ -3,89 +3,196 @@
 
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Laporan SIPIKA</title>
+    <title>Laporan Keuangan SIPIS</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-            color: #222;
-            margin: 30px;
+        @page {
+            size: A4 portrait;
+            margin: 18mm 15mm;
         }
 
-        h2 {
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            color: #222;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .header {
             text-align: center;
-            margin-bottom: 5px;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #087052;
+        }
+
+        .header h1 {
+            font-size: 19px;
+            margin: 0 0 5px;
+            color: #087052;
+        }
+
+        .header p {
+            margin: 3px 0;
+            font-size: 11px;
         }
 
         .periode {
-            text-align: center;
-            color: #666;
-            margin-bottom: 25px;
-        }
-
-        .ringkasan {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 25px;
-        }
-
-        .ringkasan td {
-            border: 1px solid #999;
-            padding: 10px;
-        }
-
-        .ringkasan .label {
+            margin-top: 10px;
             font-weight: bold;
-            width: 35%;
+            font-size: 12px;
         }
 
+        .judul-section {
+            font-size: 13px;
+            margin: 20px 0 10px;
+            color: #087052;
+        }
+
+        table.ringkasan,
         table.data {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 25px;
+        }
+
+        table.ringkasan {
+            margin-bottom: 20px;
+        }
+
+        .ringkasan td {
+            border: 1px solid #ccc;
+            padding: 9px 10px;
+        }
+
+        .ringkasan .label {
+            width: 55%;
+            font-weight: bold;
+            background: #f3f6f4;
+        }
+
+        .ringkasan .nominal {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .ringkasan .saldo td {
+            background: #e5f4ec;
+            color: #087052;
+            font-weight: bold;
+        }
+
+        table.data {
+            margin-bottom: 20px;
+        }
+
+        table.data thead {
+            display: table-header-group;
+        }
+
+        table.data tfoot {
+            display: table-row-group;
+        }
+
+        table.data tr {
+            page-break-inside: avoid;
         }
 
         table.data th,
         table.data td {
-            border: 1px solid #999;
+            border: 1px solid #bbb;
             padding: 7px 8px;
+            vertical-align: top;
         }
 
         table.data th {
-            background: #eee;
+            background: #eaf2ee;
+            color: #222;
             text-align: left;
         }
 
-        .judul-section {
-            margin-top: 20px;
-            margin-bottom: 10px;
+        .kolom-no {
+            width: 35px;
+            text-align: center !important;
+        }
+
+        .kolom-tanggal {
+            width: 85px;
+            white-space: nowrap;
+        }
+
+        .kolom-nominal {
+            width: 115px;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .total-row td {
+            font-weight: bold;
+            background: #f3f6f4;
+        }
+
+        .kosong {
+            text-align: center;
+            color: #666;
+            padding: 12px !important;
+        }
+
+        .catatan {
+            font-size: 10px;
+            color: #555;
+            margin-top: 15px;
+        }
+
+        .pengesahan {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 35px;
+            page-break-inside: avoid;
+        }
+
+        .pengesahan td {
+            width: 50%;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .jabatan {
+            font-weight: bold;
+        }
+
+        .ruang-ttd {
+            height: 75px;
+        }
+
+        .nama-pejabat {
+            font-weight: bold;
+            text-decoration: underline;
         }
 
         .cetak {
-            margin-top: 30px;
+            margin-top: 25px;
             text-align: center;
         }
 
         .btn {
             display: inline-block;
-            padding: 8px 15px;
-            background: #168aad;
+            padding: 9px 16px;
+            background: #087052;
             color: white;
             text-decoration: none;
-            border-radius: 4px;
+            border-radius: 5px;
         }
 
         @media print {
             .cetak {
                 display: none;
-            }
-
-            body {
-                margin: 15px;
             }
         }
     </style>
@@ -93,113 +200,132 @@
 
 <body>
 
-    <h2>LAPORAN KEUANGAN SIPIKA</h2>
+    {{-- HEADER --}}
+    <div class="header">
+        <h1>LAPORAN KEUANGAN SIPIS</h1>
+        <p>Sistem Pendataan Infaq Siswa</p>
 
-    <div class="periode">
-        Periode:
-        {{ \Carbon\Carbon::parse($bulan . '-01')->locale('id')->translatedFormat('F Y') }}
+        <div class="periode">
+            Periode:
+            {{ \Carbon\Carbon::parse($bulan . '-01')->locale('id')->translatedFormat('F Y') }}
+        </div>
     </div>
 
-    {{-- RINGKASAN --}}
+    {{-- RINGKASAN KEUANGAN --}}
+    <h2 class="judul-section">Ringkasan Keuangan</h2>
+
     <table class="ringkasan">
-        <tr>
-            <td class="label">Total Infaq</td>
-            <td>Rp{{ number_format($totalInfaq, 0, ',', '.') }}</td>
-        </tr>
-
-        <tr>
-            <td class="label">Total Pengeluaran</td>
-            <td>Rp{{ number_format($totalPengeluaran, 0, ',', '.') }}</td>
-        </tr>
-
-        <tr>
-            <td class="label">Saldo</td>
-            <td>Rp{{ number_format($saldo, 0, ',', '.') }}</td>
-        </tr>
-    </table>
-
-    {{-- DATA INFAQ --}}
-    <h3 class="judul-section">Data Infaq</h3>
-
-    <table class="data">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Kelas</th>
-                <th>Tanggal</th>
-                <th>Nominal</th>
-                <th>Keterangan</th>
-            </tr>
-        </thead>
-
         <tbody>
-            @forelse($infaqs as $i => $infaq)
-                <tr>
-                    <td>{{ $i + 1 }}</td>
-                    <td>{{ $infaq->nama }}</td>
-                    <td>{{ $infaq->kelas }}</td>
+            <tr>
+                <td class="label">Total Infaq</td>
+                <td class="nominal">
+                    Rp{{ number_format($totalInfaq, 0, ',', '.') }}
+                </td>
+            </tr>
 
-                    <td>
-                        {{ \Carbon\Carbon::parse($infaq->tanggal)->format('d/m/Y') }}
-                    </td>
+            <tr>
+                <td class="label">Total Pengeluaran</td>
+                <td class="nominal">
+                    Rp{{ number_format($totalPengeluaran, 0, ',', '.') }}
+                </td>
+            </tr>
 
-                    <td>
-                        Rp{{ number_format($infaq->nominal, 0, ',', '.') }}
-                    </td>
-
-                    <td>{{ $infaq->keterangan }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6">Belum ada data infaq pada bulan ini.</td>
-                </tr>
-            @endforelse
+            <tr class="saldo">
+                <td class="label">Saldo Akhir</td>
+                <td class="nominal">
+                    Rp{{ number_format($saldo, 0, ',', '.') }}
+                </td>
+            </tr>
         </tbody>
     </table>
 
-    {{-- DATA PENGELUARAN --}}
-    <h3 class="judul-section">Data Pengeluaran</h3>
+    {{-- RINCIAN PENGELUARAN --}}
+    <h2 class="judul-section">Rincian Pengeluaran</h2>
 
     <table class="data">
         <thead>
             <tr>
-                <th>No</th>
-                <th>Tanggal</th>
-                <th>Keterangan</th>
-                <th>Nominal</th>
+                <th class="kolom-no">No</th>
+                <th class="kolom-tanggal">Tanggal</th>
+                <th>Keterangan Penggunaan</th>
+                <th class="kolom-nominal">Nominal</th>
             </tr>
         </thead>
 
         <tbody>
             @forelse($pengeluarans as $i => $pengeluaran)
                 <tr>
-                    <td>{{ $i + 1 }}</td>
+                    <td class="kolom-no">{{ $i + 1 }}</td>
 
-                    <td>
+                    <td class="kolom-tanggal">
                         {{ \Carbon\Carbon::parse($pengeluaran->tanggal)->format('d/m/Y') }}
                     </td>
 
-                    <td>{{ $pengeluaran->keterangan }}</td>
-
                     <td>
+                        {{ $pengeluaran->keterangan ?: '-' }}
+                    </td>
+
+                    <td class="kolom-nominal">
                         Rp{{ number_format($pengeluaran->nominal, 0, ',', '.') }}
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4">Belum ada data pengeluaran pada bulan ini.</td>
+                    <td colspan="4" class="kosong">
+                        Tidak ada pengeluaran pada periode ini.
+                    </td>
                 </tr>
             @endforelse
         </tbody>
+
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="3" style="text-align: right;">
+                    TOTAL PENGELUARAN
+                </td>
+                <td class="kolom-nominal">
+                    Rp{{ number_format($totalPengeluaran, 0, ',', '.') }}
+                </td>
+            </tr>
+        </tfoot>
     </table>
 
+    {{-- CATATAN --}}
+    <p class="catatan">
+        Laporan ini memuat ringkasan keuangan dan rincian penggunaan dana.
+        Data lengkap infaq siswa tetap tersimpan dalam arsip SIPIS.
+    </p>
+
+    {{-- TANDA TANGAN --}}
+    <table class="pengesahan">
+        <tbody>
+            <tr>
+                <td>
+                    <div class="jabatan">Bendahara Sekolah</div>
+                    <div class="ruang-ttd"></div>
+                    <div class="nama-pejabat">
+                        (........................................)
+                    </div>
+                </td>
+
+                <td>
+                    <div class="jabatan">Kepala Madrasah</div>
+                    <div class="ruang-ttd"></div>
+                    <div class="nama-pejabat">
+                        (........................................)
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{-- CETAK --}}
     <div class="cetak">
-        <a href="#" class="btn" onclick="window.print(); return false;">
+        <a href="#" class="btn"
+           onclick="window.print(); return false;">
             Cetak / Simpan PDF
         </a>
     </div>
 
 </body>
 </html>
-

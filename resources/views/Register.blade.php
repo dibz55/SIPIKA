@@ -8,7 +8,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>SIPIKA - Register</title>
+    <title>SIPIS - Register</title>
 
     <style>
 
@@ -587,25 +587,40 @@
             </div>
 
 
-            <!-- USERNAME -->
-
+            
+            <!-- EMAIL -->
             <div class="form-group">
+                <label for="email">Email</label>
 
-                <label for="username">
-                    Username
-                </label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="{{ old('email') }}"
+                    placeholder="Masukkan email aktif"
+                    autocomplete="email"
+                    required>
+            </div>
+
+
+
+            <!-- USERNAME -->
+            <div class="form-group">
+                <label for="username">Username</label>
 
                 <input
                     type="text"
                     id="username"
                     name="username"
                     value="{{ old('username') }}"
-                    placeholder="Masukkan username"
+                    placeholder="Buat username"
                     autocomplete="username"
                     required>
 
+                @error('username')
+                    <small class="error-message">{{ $message }}</small>
+                @enderror
             </div>
-
 
             <!-- PASSWORD -->
 
@@ -680,7 +695,7 @@
 
 
 </div>
-
+    
 
 </body>
 

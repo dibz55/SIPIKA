@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -5,156 +6,256 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>SIPIKA - @yield('title')</title>
+    <title>{{ config('app.name') }} - @yield('title')</title>
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    {{-- Bootstrap CSS --}}
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    >
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    {{-- Bootstrap Icons --}}
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    >
 
-    <link rel="stylesheet"
-          href="{{ asset('css/app.css') }}">
+    {{-- CSS Utama SIPIKA --}}
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/app.css') }}"
+    >
+
+    @stack('styles')
 </head>
 
 <body>
+
+@php
+    $user = auth()->user();
+
+    $isInfaqMassal = request()->routeIs('infaq.massal*');
+
+    $isDataInfaq = request()->routeIs(
+        'infaq.index',
+        'infaq.create',
+        'infaq.store',
+        'infaq.edit',
+        'infaq.update',
+        'infaq.destroy'
+    );
+
+    $fotoProfil = $user?->foto_profil;
+    $pathFotoProfil = $fotoProfil
+        ? public_path('storage/' . $fotoProfil)
+        : null;
+@endphp
 
 <div class="sipika-wrapper">
 
     {{-- SIDEBAR --}}
     <aside class="sipika-sidebar">
 
+        {{-- BRAND --}}
         <div class="brand">
-            SIPIKA
+            SIPIS
         </div>
 
+        {{-- MENU NAVIGASI --}}
         <nav class="sidebar-menu">
 
             {{-- Dashboard --}}
-            <a href="{{ route('dashboard') }}"
-               class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-
+            <a
+                href="{{ route('dashboard') }}"
+                class="{{ request()->routeIs('dashboard') ? 'active' : '' }}"
+            >
                 <i class="bi bi-house-fill"></i>
-
                 <span>Dashboard</span>
-
             </a>
-
 
             {{-- Data Pengeluaran --}}
-            <a href="{{ route('pengeluaran.index') }}"
-               class="{{ request()->routeIs('pengeluaran.*') ? 'active' : '' }}">
-
-                <i class="bi bi-calendar3"></i>
-
+            <a
+                href="{{ route('pengeluaran.index') }}"
+                class="{{ request()->routeIs('pengeluaran.*') ? 'active' : '' }}"
+            >
+                <i class="bi bi-cash-stack"></i>
                 <span>Data Pengeluaran</span>
-
             </a>
-
 
             {{-- Data Infaq --}}
-            <a href="{{ route('infaq.index') }}"
-               class="{{ request()->routeIs('infaq.*') ? 'active' : '' }}">
-
-                <i class="bi bi-calendar3"></i>
-
+            <a
+                href="{{ route('infaq.index') }}"
+                class="{{ $isDataInfaq ? 'active' : '' }}"
+            >
+                <i class="bi bi-wallet2"></i>
                 <span>Data Infaq</span>
-
             </a>
 
+            {{-- Input Infaq Massal --}}
+            <a
+                href="{{ route('infaq.massal') }}"
+                class="{{ $isInfaqMassal ? 'active' : '' }}"
+            >
+                <i class="bi bi-people-fill"></i>
+                <span>Input Infaq Massal</span>
+            </a>
 
             {{-- Laporan --}}
-            <a href="{{ route('laporan.index') }}"
-               class="{{ request()->routeIs('laporan.*') ? 'active' : '' }}">
-
-                <i class="bi bi-clipboard-text-fill"></i>
-
+            <a
+                href="{{ route('laporan.index') }}"
+                class="{{ request()->routeIs('laporan.*') ? 'active' : '' }}"
+            >
+                <i class="bi bi-clipboard-data-fill"></i>
                 <span>Laporan</span>
-
             </a>
-
 
             {{-- Profil --}}
-            <a href="{{ route('profil.index') }}"
-               class="{{ request()->routeIs('profil.*') ? 'active' : '' }}">
-
+            <a
+                href="{{ route('profil.index') }}"
+                class="{{ request()->routeIs('profil.*') ? 'active' : '' }}"
+            >
                 <i class="bi bi-person-fill"></i>
-
                 <span>Profil</span>
-
             </a>
 
-
             {{-- Logout --}}
-            <form method="POST" action="{{ route('logout') }}">
-
+            <form
+                method="POST"
+                action="{{ route('logout') }}"
+                class="sidebar-logout-form"
+            >
                 @csrf
 
-                <a href="#"
-                   onclick="event.preventDefault(); this.closest('form').submit();">
-
+                <button
+                    type="submit"
+                    class="sidebar-logout-button"
+                    onclick="return confirm('Yakin ingin keluar dari SIPIKA?')"
+                >
                     <i class="bi bi-box-arrow-right"></i>
-
                     <span>Logout</span>
-
-                </a>
-
+                </button>
             </form>
 
         </nav>
 
     </aside>
 
-
-    {{-- AREA KANAN --}}
+    {{-- AREA KONTEN --}}
     <div class="sipika-content">
 
         {{-- TOPBAR --}}
         <header class="sipika-topbar">
 
-            <button type="button" id="sidebarToggle" class="hamburger">
-
+            {{-- Tombol Toggle Sidebar --}}
+            <button
+                type="button"
+                id="sidebarToggle"
+                class="hamburger"
+                aria-label="Buka atau tutup sidebar"
+                aria-expanded="true"
+            >
                 <i class="bi bi-arrow-left"></i>
-
             </button>
 
+            {{-- Profil Administrator --}}
+            <a
+                href="{{ route('profil.index') }}"
+                class="topbar-admin"
+                aria-label="Buka profil administrator"
+            >
 
-            <div class="topbar-profile">
+                <div class="topbar-admin-info">
+                    <span class="topbar-admin-name">
+                        {{ $user?->name ?? 'Administrator' }}
+                    </span>
 
-           @if(auth()->user()->foto_profil)
-            <img
-                src="{{ asset('storage/' . auth()->user()->foto_profil) }}"
-                alt="Foto Profil"
-                class="topbar-profile-img"
+                    <span class="topbar-admin-role">
+                        Administrator
+                    </span>
+                </div>
+
+                <div class="topbar-profile">
+
+                    @if(
+                        $fotoProfil &&
+                        $pathFotoProfil &&
+                        file_exists($pathFotoProfil)
+                    )
+                        <img
+                            src="{{ asset('storage/' . $fotoProfil) }}"
+                            alt="Foto Profil Administrator"
+                            class="topbar-profile-img"
                         >
                     @else
                         <i class="bi bi-person-circle"></i>
                     @endif
 
-            </div>
+                </div>
+
+            </a>
 
         </header>
 
-
         {{-- JUDUL HALAMAN --}}
         <div class="page-title">
-
-            <h1>
-                @yield('title')
-            </h1>
-
+            <h1>@yield('title')</h1>
         </div>
 
-
-        {{-- CONTENT --}}
+        {{-- KONTEN UTAMA --}}
         <main class="sipika-main">
 
+            {{-- Notifikasi Berhasil --}}
             @if(session('success'))
-
-                <div class="alert alert-success">
+                <div
+                    class="alert alert-success alert-dismissible fade show"
+                    role="alert"
+                >
+                    <i class="bi bi-check-circle-fill me-2"></i>
                     {{ session('success') }}
-                </div>
 
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Tutup"
+                    ></button>
+                </div>
+            @endif
+
+            {{-- Notifikasi Peringatan --}}
+            @if(session('warning'))
+                <div
+                    class="alert alert-warning alert-dismissible fade show"
+                    role="alert"
+                >
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    {{ session('warning') }}
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Tutup"
+                    ></button>
+                </div>
+            @endif
+
+            {{-- Notifikasi Error --}}
+            @if(session('error'))
+                <div
+                    class="alert alert-danger alert-dismissible fade show"
+                    role="alert"
+                >
+                    <i class="bi bi-x-circle-fill me-2"></i>
+                    {{ session('error') }}
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Tutup"
+                    ></button>
+                </div>
             @endif
 
             @yield('content')
@@ -165,41 +266,36 @@
 
 </div>
 
+{{-- JAVASCRIPT SIDEBAR --}}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const wrapper = document.querySelector('.sipika-wrapper');
+    const toggle = document.getElementById('sidebarToggle');
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+    if (!wrapper || !toggle) {
+        return;
+    }
 
-            const wrapper = document.querySelector('.sipika-wrapper');
-            const toggle = document.getElementById('sidebarToggle');
+    const icon = toggle.querySelector('i');
 
-            if (!wrapper || !toggle) {
-                return;
-            }
+    toggle.addEventListener('click', function () {
+        const collapsed = wrapper.classList.toggle('sidebar-collapsed');
 
-            toggle.addEventListener('click', function () {
+        if (icon) {
+            icon.classList.toggle('bi-arrow-left', !collapsed);
+            icon.classList.toggle('bi-arrow-right', collapsed);
+        }
 
-                wrapper.classList.toggle('sidebar-collapsed');
-
-                const icon = toggle.querySelector('i');
-
-                if (wrapper.classList.contains('sidebar-collapsed')) {
-                    icon.classList.remove('bi-arrow-left');
-                    icon.classList.add('bi-arrow-right');
-                } else {
-                    icon.classList.remove('bi-arrow-right');
-                    icon.classList.add('bi-arrow-left');
-                }
-
-            });
-
-        });
+        toggle.setAttribute('aria-expanded', String(!collapsed));
+    });
+});
 </script>
 
-{{-- Bootstrap JavaScript untuk modal dan komponen interaktif --}}
+{{-- Bootstrap JavaScript --}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+{{-- Script Tambahan per Halaman --}}
 @stack('scripts')
 
 </body>
 </html>
-

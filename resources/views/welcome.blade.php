@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SIPIKA - MI Al-Falahiyyah</title>
+    <title>SIPIS - MI Al-Falahiyyah</title>
 
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
@@ -250,10 +250,10 @@
                      alt="Logo MI Al-Falahiyyah">
             </div>
 
-            <h1>SIPIKA</h1>
+            <h1>SIPIS</h1>
 
             <div class="subtitle">
-                Sistem Pendataan Infaq Kelas
+                Sistem Pendataan Infaq Siswa
             </div>
 
             <p class="description">
@@ -275,8 +275,8 @@
             <h2>Selamat Datang</h2>
 
             <p>
-                Kelola data keuangan kelas dengan lebih
-                sederhana, rapi, dan terorganisir melalui SIPIKA.
+                Kelola data keuangan siswa dengan lebih
+                sederhana, rapi, dan terorganisir melalui SIPIS.
             </p>
 
             <ul class="feature-list">
@@ -304,7 +304,7 @@
             </a>
 
             <div class="footer-text">
-                © {{ date('Y') }} SIPIKA · MIS Al-Falahiyyah
+                © {{ date('Y') }} SIPIS · MIS Al-Falahiyyah
             </div>
 
         </div>
